@@ -11,17 +11,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
 @RestController
 public class JsonRpcController {
+
     @Autowired
     private BookService bookService;
-    @PostMapping("/jsonrpc")
-    public ResponseEntity<Object> handleJsonRpcRequest(@RequestBody
-                                                       JsonRpcRequest request) {
+
+    @PostMapping(value = "/jsonrpc", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Object> handleJsonRpcRequest(@RequestBody JsonRpcRequest request) {
         try {
             String method = request.getMethod();
             JsonNode params = request.getParams();
             System.out.println("Method: "+ method);
+
             switch (method) {
                 case "createBook" -> {
                     String title = params.get("title").asText();
