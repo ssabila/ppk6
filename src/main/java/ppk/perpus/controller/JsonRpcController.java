@@ -23,7 +23,7 @@ public class JsonRpcController {
             JsonNode params = request.getParams();
             System.out.println("Method: "+ method);
             switch (method) {
-                case "createBook":
+                case "createBook" -> {
                     String title = params.get("title").asText();
                     String author = params.get("author").asText();
                     String description = params.get("description").asText();
@@ -33,12 +33,21 @@ public class JsonRpcController {
                             .author(author)
                             .build();
                     bookService.createBook(book);
-                    return ResponseEntity.ok(new JsonRpcResponse());
-                case "getBooks":
+
+                    return ResponseEntity.ok(new JsonRpcResponse("created", request.getId()));
+                }
+                case "getBooks" -> {
                     List<BookDto> books = bookService.getBooks();
-                    return ResponseEntity.ok(new JsonRpcResponse());
-                default:
+                    return ResponseEntity.ok(new JsonRpcResponse(books, request.getId()));
+                }
+                case "searchBooks" -> {
+                    String keyword = params.get("keyword").asText();
+                    List<BookDto> searchResults = bookService.searchBooks(keyword);
+                    return ResponseEntity.ok(new JsonRpcResponse(searchResults, request.getId()));
+                }
+                default -> {
                     return ResponseEntity.badRequest().build();
+                }
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();

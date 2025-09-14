@@ -24,4 +24,13 @@ public class BookServiceImpl implements BookService{
                 .collect(Collectors.toList());
         return bookDtos;
     }
+
+    @Override
+    public List<BookDto> searchBooks(String keyword) {
+        List<Book> books = bookRepository.findByTitleContainingIgnoreCase(keyword);
+        List<BookDto> bookDtos = books.stream()
+                .map((book) -> (BookMapper.mapToBookDto(book)))
+                .collect(Collectors.toList());
+        return bookDtos;
+    }
 }
